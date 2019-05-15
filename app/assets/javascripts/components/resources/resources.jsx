@@ -8,6 +8,7 @@ import { getWeeksArray } from '../../selectors';
 import Block from '../timeline/block';
 import TrainingModules from '../timeline/training_modules';
 import Handouts from './handouts';
+import { BLOCK_KIND_RESOURCES } from '../../constants/timeline';
 
 const Resources = ({ weeks, current_user, course }) => {
   const trainingLibrarySlug = course.training_library_slug;
@@ -19,11 +20,11 @@ const Resources = ({ weeks, current_user, course }) => {
   const modules = _.compact(_.flatten(blocks.map(block => block.training_modules)));
 
   let additionalResources;
-  const additionalResourcesBlock = blocks.find(block => block.title.match(/Additional Resources/));
-  if (additionalResourcesBlock) {
+  const additionalResourcesBlocks = blocks.filter(block => block.kind === BLOCK_KIND_RESOURCES);
+  if (additionalResourcesBlocks) {
     additionalResources = (
       <div className="list-unstyled container mt2 mb2">
-        <Block block={additionalResourcesBlock} trainingLibrarySlug={trainingLibrarySlug} />
+        {additionalResourcesBlocks.map(block => <Block key={block.id} block={block} trainingLibrarySlug={trainingLibrarySlug} />)}
       </div>
     );
   }
